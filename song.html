@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>裏町酒場｜歌詞展示頁</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-image: url('background.jpg'); /* 請替換為你自己的圖片檔案 */
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .content {
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 250px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    #extraText {
+      display: none;
+      white-space: pre-line;
+      text-align: left;
+      margin-top: 10px;
+    }
+
+    #toggleBtn {
+      margin-top: 15px;
+      background-color: #007bff;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #toggleBtn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script src="https://www.vedfolnir.com/resource/javascript/snowstorm.js" async></script>
+</head>
+<body>
+  <div class="content">
+    <h1>《裏町酒場》</h1>
+    <iframe src="https://www.youtube.com/watch?v=49Fv3ke1sFk&list=RD49Fv3ke1sFk&start_radio=1" allowfullscreen></iframe>
+
+    <button id="toggleBtn" onclick="toggleLyrics()">顯示歌詞</button>
+    <div id="extraText">
+
+觀看次數：1,140,265次  2025年4月14日  Ayako Fuji 藤あや子+ 石川さゆり+長山洋子+邓丽君华日语金曲 - Teresa Teng テレサ・テン
+裏町酒場 Lyrics 
+雨(あめ)にぬれてる 赤(あか)い灯(ひ)が
+俺(おれ)にゃ似合(にあ)いの 裏町酒場(うらまちさかば)
+泣(な)いているのか あの唄(うた)も
+酔(よ)えばおまえの 声(こえ)になる
+よせよいまさら あゝ ひとり酒(ざけ)
+
+肩(かた)を並(なら)べて 飲(の)む夜(よ)が
+俺(おれ)とおまえの 倖(しあわ)せだった
+夢(ゆめ)を落(お)とした 盃(さかずき)を
+そっと笑(わら)って 飲(の)んでいた
+想(おも)い出(だ)すのさ あゝ ひとり酒(ざけ)   
+
+いつかおまえと みちづれに
+俺(おれ)はなろうと 思(おも)ったものを
+箸(はし)の袋(ふくろ)に 別(わか)れ文字(もじ)
+書(か)いて残(のこ)して どこ行(い)った
+馬鹿(ばか)な奴(やつ)だよ あゝ ひとり酒(ざけ)
+作曲:竜鉄也
+作詞:さいとう大三
+Welcome everyone! I share my passion for music, especially Japanese songs, and songs in multiple languages. alongside short videos of the amazing birds in my local area. Welcome to subscribe to my YouTube channel to explore the sounds and sights of the world with me. Thank you!
+#music #videoediting #travel #health
+裏町酒場
+红灯被雨淋湿了
+后巷酒吧很适合我
+那首歌也哭吗？
+当我喝醉时，我的声音就变成了你的声音
+马上停止, 啊，我一个人喝酒
+
+我们并肩喝酒的夜晚
+这是我们共同的幸福。
+毁了我梦想的杯子
+他一边喝酒一边轻声笑着。
+这让我想起，啊，独自喝酒
+
+有一天我会和你一起旅行
+我想成为事实
+筷子包装上的单独文字
+写下来之后你去哪儿了？
+他真是个傻瓜。啊，一个人喝酒。
+
+    </div>
+    <br>
+    <button onclick="downloadPage()">下載畫面</button>
+  </div>
+
+  <script>
+    function toggleLyrics() {
+      const lyrics = document.getElementById("extraText");
+      const btn = document.getElementById("toggleBtn");
+      const visible = lyrics.style.display === "block";
+      lyrics.style.display = visible ? "none" : "block";
+      btn.textContent = visible ? "顯示歌詞" : "隱藏歌詞";
+    }
+
+    function downloadPage() {
+      html2canvas(document.body).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "page_snapshot.png";
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>
