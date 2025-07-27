@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube 影片縮圖展示</title>
+  <style>
+    body {
+      background: #f0f0f0;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      color: #333;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .gallery a {
+      margin: 10px;
+    }
+    .gallery img {
+      width: 160px;
+      height: 90px;
+      box-shadow: 0 0 5px #aaa;
+      transition: transform 0.2s;
+    }
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <h2>YouTube 影片縮圖展示</h2>
+  <div class="gallery" id="gallery"></div>
+
+  <script>
+    const videoIds = [
+      "ILL-P_K_nzo",
+      "QTpaAQRvk2A",
+      "-OLEYfQ_X9Y",
+      "WwSGzC-enf0"
+    ];
+
+    const gallery = document.getElementById('gallery');
+
+    videoIds.forEach(id => {
+      const link = document.createElement('a');
+      link.href = `https://www.youtube.com/watch?v=${id}`;
+      link.target = '_blank';
+
+      const img = document.createElement('img');
+      img.src = `https://img.youtube.com/vi/${id}/0.jpg`;
+      img.alt = `影片 ${id}`;
+
+      link.appendChild(img);
+      gallery.appendChild(link);
+    });
+  </script>
+</body>
+</html>
