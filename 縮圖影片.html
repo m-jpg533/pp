@@ -1,8 +1,49 @@
 
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>影片縮圖展示</title>
+  <style>
+    body {
+      background: #f0f0f0;
+      font-family: sans-serif;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 20px;
+    }
+    .gallery a {
+      margin: 10px;
+    }
+    .gallery img {
+      width: 160px;
+      height: 90px;
+      box-shadow: 0 0 5px #aaa;
+      transition: transform 0.2s;
+    }
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <h2>影片縮圖展示</h2>
+  <div class="gallery">
+    <a href="https://www.youtube.com/watch?v=ILL-P_K_nzo" target="_blank">
+      <img src="thumb_0.jpg" alt="Video 1">
+    </a>
+    <a href="https://www.youtube.com/watch?v=QTpaAQRvk2A" target="_blank">
+      <img src="thumb_1.jpg" alt="Video 2">
+    </a>
+    <a href="https://www.youtube.com/watch?v=-OLEYfQ_X9Y" target="_blank">
+      <img src="thumb_2.jpg" alt="Video 3">
+    </a>
+    <a href="https://www.youtube.com/watch?v=WwSGzC-enf0" target="_blank">
+      <img src="thumb_3.jpg" alt="Video 4">
+    </a>
+  </div>
+</body>
+</html>
 
-<html><body style="background:#f0f0f0;"><h2>ÂIÀ»ÁY¹Ï¼½©ñ¼v¤ù</h2><div style="display:flex;flex-wrap:wrap;">
-<a href="https://www.youtube.com/watch?v=ILL-P_K_nzo" target="_blank"><img src="thumb_0.jpg" style="margin:10px;width:160px;height:90px;"></a>
-<a href="https://www.youtube.com/watch?v=QTpaAQRvk2A" target="_blank"><img src="thumb_1.jpg" style="margin:10px;width:160px;height:90px;"></a>
-<a href="https://www.youtube.com/watch?v=-OLEYfQ_X9Y" target="_blank"><img src="thumb_2.jpg" style="margin:10px;width:160px;height:90px;"></a>
-<a href="https://www.youtube.com/watch?v=WwSGzC-enf0" target="_blank"><img src="thumb_3.jpg" style="margin:10px;width:160px;height:90px;"></a>
-</div></body></html>
