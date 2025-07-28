@@ -135,41 +135,4 @@
 
           display.innerHTML = '';
           display.appendChild(mediaItem);
-        };
-        reader2.readAsDataURL(mediaFile);
-      };
-      reader1.readAsDataURL(profilePic);
-    }
-
-    function startCountdown() {
-      let sec = 10;
-      const countdown = document.getElementById('countdown');
-      countdown.style.display = 'block';
-      countdown.innerHTML = `內容將在 <strong>${sec} 秒</strong> 後自動銷毀...`;
-      countdownInterval = setInterval(() => {
-        sec--;
-        countdown.innerHTML = `內容將在 <strong>${sec} 秒</strong> 後自動銷毀...`;
-        if (sec <= 0) clearInterval(countdownInterval);
-      }, 1000);
-
-      destroyTimeout = setTimeout(() => {
-        document.getElementById('main-container').innerHTML = '';
-        document.body.style.backgroundColor = '#ff6961';
-        document.getElementById('password-container').style.display = 'block';
-      }, 10000);
-    }
-
-    function checkPassword() {
-      const input = document.getElementById('password-input').value;
-      if (input === correctPassword) {
-        document.getElementById('main-container').innerHTML = originalContent;
-        document.body.style.backgroundColor = '#f4f4f4';
-        document.getElementById('password-container').style.display = 'none';
-        document.getElementById('wrong-password').style.display = 'none';
-      } else {
-        document.getElementById('wrong-password').style.display = 'block';
-      }
-    }
-  </script>
-</body>
-</html>
+    
