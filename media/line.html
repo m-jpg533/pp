@@ -1,0 +1,124 @@
+<!-- <!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>媒體上傳與分享</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+    img, video { max-width: 100%; margin-top: 20px; }
+    #countdown { font-weight: bold; color: red; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<!-- 上傳區 -->
+<div id="upload-section">
+  <h2>上傳圖片或影片（需手動放入 media/）</h2>
+  <input type="text" id="name" placeholder="你的名字"><br><br>
+  <input type="file" id="file" accept="image/*,video/*"><br><br>
+  <button onclick="generateLink()">產生分享連結</button>
+  <div id="result" style="display:none;">
+    <p>分享網址：</p>
+    <textarea id="shareUrl" rows="3" style="width:100%;"></textarea>
+    <p>
+      <a id="lineShare" target="_blank">
+        <img src="https://scdn.line-apps.com/n/line_it/thirdparty/icon_32.png" width="32"> 分享到 LINE
+      </a>
+    </p>
+  </div>
+</div>
+
+<!-- 瀏覽區 -->
+<div id="view-section" style="display:none;">
+  <h2 id="viewer-name"></h2>
+  <div id="media-display"></div>
+  <p id="countdown" style="display:none;"></p>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const file = params.get("file");
+const name = params.get("name") || "匿名";
+const type = params.get("type");
+
+if (file && type) {
+  // 瀏覽模式
+  document.getElementById("upload-section").style.display = "none";
+  document.getElementById("view-section").style.display = "block";
+  document.getElementById("viewer-name").innerText = `${name} 的媒體`;
+
+  const display = document.getElementById("media-display");
+  const src = `media/${file}`;
+
+  if (type.startsWith("image")) {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => startCountdown();
+    display.appendChild(img);
+  } else if (type.startsWith("video")) {
+    const vid = document.createElement("video");
+    vid.src = src;
+    vid.controls = true;
+    vid.onended = () => startCountdown();
+    display.appendChild(vid);
+  }
+}
+
+function generateLink() {
+  const f = document.getElementById("file").files[0];
+  const n = document.getElementById("name").value || "匿名";
+  if (!f) return alert("請選擇檔案");
+
+  const url = `${location.origin}${location.pathname}?name=${encodeURIComponent(n)}&type=${f.type}&file=${encodeURIComponent(f.name)}`;
+  document.getElementById("shareUrl").value = url;
+  document.getElementById("lineShare").href = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}`;
+  document.getElementById("result").style.display = "block";
+}
+
+function startCountdown() {
+  let sec = 10;
+  const cd = document.getElementById("countdown");
+  cd.style.display = "block";
+  cd.innerText = `內容將於 ${sec} 秒後自動銷毀`;
+  const timer = setInterval(() => {
+    sec--;
+    cd.innerText = `內容將於 ${sec} 秒後自動銷毀`;
+    if (sec <= 0) {
+      clearInterval(timer);
+      document.body.innerHTML = "<h2 style='color:red;'>內容已自動銷毀</h2>";
+    }
+  }, 1000);
+}
+</script>
+
+</body>
+</html>
+ -->
+ <!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>圖片與影片上傳分享</title>
+</head>
+<body>
+  <h2>上傳圖片與影片後，產生 LINE 分享連結</h2>
+  <input type="file" id="file" accept="image/*,video/*"><br><br>
+  <button onclick="handleUpload()">產生分享連結</button>
+  <p>LINE 分享：</p>
+  <a id="lineLink" href="#" target="_blank">
+    <img src="https://scdn.line-apps.com/n/line_it/thirdparty/icon_32.png">
+  </a>
+
+  <script>
+    function handleUpload() {
+      const file = document.getElementById("file").files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const url = location.origin + location.pathname + "?media=" + encodeURIComponent(e.target.result) + "&type=" + file.type;
+        document.getElementById("lineLink").href = "https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(url);
+      };
+      reader.readAsDataURL(file);
+    }
+  </script>
+</body>
+</html>
