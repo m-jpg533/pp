@@ -3,11 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <title>媒體上傳與分享</title>
-  <style>
-    body { font-family: Arial; padding: 20px; background: #f4f4f4; }
-    img, video { max-width: 100%; margin-top: 20px; }
-    #countdown { font-weight: bold; color: red; margin-top: 20px; }
-  </style>
+
+  <!-- Open Graph (LINE, FB, Twitter 都能讀) -->
+  <meta property="og:title" content="我的媒體分享" />
+  <meta property="og:description" content="點擊查看圖片或影片" />
+  <meta property="og:image" content="https://m-jpg533.github.io/pp/media/sample.jpg" />
+  <meta property="og:url" content="https://m-jpg533.github.io/pp/line.html" />
+  <meta property="og:type" content="website" />
+
+  <!-- 如果要影片 -->
+  <meta property="og:video" content="https://m-jpg533.github.io/pp/media/sample.mp4" />
+  <meta property="og:video:type" content="video/mp4" />
 </head>
 <body>
 
@@ -93,3 +99,4 @@ function startCountdown() {
 
 </body>
 </html>
+
