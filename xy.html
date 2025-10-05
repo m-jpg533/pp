@@ -1,0 +1,123 @@
+ <!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圖片 + YouTube + 本地影片輪播</title>
+<style>
+  body { margin:0; background:#000; display:flex; justify-content:center; align-items:center; height:100vh; }
+  #carousel { position:relative; width:100%; max-width:800px; aspect-ratio:16/9; overflow:hidden; border-radius:12px; background:#111; }
+  #slides { display:flex; width:100%; height:100%; transition:transform 0.6s ease-in-out; }
+  .slide { min-width:100%; height:100%; display:flex; justify-content:center; align-items:center; background:#000; }
+  .slide img, .slide video, .slide iframe { width:100%; height:100%; object-fit:contain; border-radius:12px; }
+  video { -webkit-playsinline: true; playsinline: true; }
+</style>
+</head>
+<body>
+<div id="carousel">
+  <div id="slides">
+    <!-- 圖片 -->
+    <div class="slide" data-type="image">
+      <img src="https://raw.githubusercontent.com/m-jpg533/pp/main/30.jpg" alt="圖片1">
+    </div>
+
+    <!-- YouTube 影片 -->
+	<!-- <div class="slide" data-type="youtube" data-video-id="klrIxRcfNqo"></div>
+ -->
+	<div class="slide" data-type="youtube" data-video-id="49Fv3ke1sFk"></div>
+
+
+    <!-- 本地影片 -->
+    <div class="slide" data-type="video">
+      <video src="https://m-jpg533.github.io/pp/2.mp4" controls></video>
+    </div>
+
+    <!-- 第二張圖片 -->
+    <div class="slide" data-type="image">
+      <img src="https://picsum.photos/id/1016/800/450" alt="圖片2">
+    </div>
+  </div>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+(() => {
+  const slidesEl = document.getElementById('slides');
+  const slides = Array.from(slidesEl.children);
+  let current = 0;
+  const imgInterval = 5000;
+  let timer = null;
+  let ytPlayers = {};
+
+  function updateUI() {
+    slidesEl.style.transform = `translateX(${-current * 100}%)`;
+  }
+
+  function stopAllVideos() {
+    slides.forEach(s => {
+      if (s.dataset.type === 'video') {
+        const v = s.querySelector('video');
+        if (v) { v.pause(); v.currentTime = 0; }
+      } else if (s.dataset.type === 'youtube') {
+        const id = s.dataset.videoId;
+        if (ytPlayers[id]) ytPlayers[id].pauseVideo();
+      }
+    });
+  }
+
+  function playVideo(v) {
+    v.play().catch(()=>{});
+    v.onended = nextSlide;
+  }
+
+  function nextSlide() {
+    stopAllVideos();
+    current = (current + 1) % slides.length;
+    updateUI();
+    startSlideTimer();
+  }
+
+  function startSlideTimer() {
+    if (timer) { clearTimeout(timer); timer = null; }
+    const slide = slides[current];
+    if (slide.dataset.type === 'image') {
+      timer = setTimeout(nextSlide, imgInterval);
+    } else if (slide.dataset.type === 'video') {
+      const v = slide.querySelector('video');
+      if (v) playVideo(v);
+    } else if (slide.dataset.type === 'youtube') {
+      const id = slide.dataset.videoId;
+      if (ytPlayers[id]) ytPlayers[id].playVideo();
+    }
+  }
+
+  function init() {
+    updateUI();
+    startSlideTimer();
+  }
+
+  // YouTube API 初始化
+  window.onYouTubeIframeAPIReady = function() {
+    slides.forEach(slide => {
+      if (slide.dataset.type === 'youtube') {
+        const id = slide.dataset.videoId;
+        const player = new YT.Player(slide, {
+          height: '100%',
+          width: '100%',
+          videoId: id,
+          playerVars: { autoplay: 0, controls: 1, rel:0, modestbranding:1 },
+          events: {
+            'onStateChange': e => {
+              if (e.data === YT.PlayerState.ENDED) nextSlide();
+            }
+          }
+        });
+        ytPlayers[id] = player;
+      }
+    });
+    init();
+  };
+})();
+</script>
+</body>
+</html>
