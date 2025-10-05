@@ -1,0 +1,241 @@
+<!-- <!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>圖片 + 影片輪播</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #carousel {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #111;
+    }
+    #slides {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s ease-in-out;
+    }
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+    }
+    .slide img, .slide video, .slide iframe {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <div id="carousel">
+    <div id="slides">
+      <!-- 圖片 -->
+      <div class="slide" data-type="image">
+        <img src="https://raw.githubusercontent.com/m-jpg533/pp/main/30.jpg" alt="圖片1">
+      </div>
+
+      <!-- YouTube 影片 -->
+      <div class="slide" data-type="iframe">
+        <div id="yt-player"></div>
+      </div>
+
+      <!-- 本地影片 -->
+      <div class="slide" data-type="video">
+        <video src="https://m-jpg533.github.io/pp/29.mp4" playsinline></video>
+      </div>
+
+      <!-- 第二張圖片 -->
+      <div class="slide" data-type="image">
+        <img src="https://picsum.photos/id/1016/800/450" alt="圖片2">
+      </div>
+    </div>
+  </div>
+
+  <!-- YouTube IFrame API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+
+  <script>
+    (() => {
+      const slidesEl = document.getElementById('slides');
+      const slides = Array.from(slidesEl.children);
+      let current = 0;
+      const imgInterval = 5000; // 圖片停留 5 秒
+      let timer = null;
+      let ytPlayer = null;
+
+      function updateUI() {
+        slidesEl.style.transform = `translateX(${-current * 100}%)`;
+      }
+
+      function stopAllVideos() {
+        slides.forEach(s => {
+          if (s.dataset.type === 'video') {
+            const v = s.querySelector('video');
+            if (v) { v.pause(); v.currentTime = 0; }
+          }
+        });
+        if (ytPlayer) {
+          ytPlayer.stopVideo();
+        }
+      }
+
+      function playVideo(v) {
+        v.play().catch(()=>{});
+        v.onended = () => nextSlide();
+      }
+
+      function nextSlide() {
+        stopAllVideos();
+        current = (current + 1) % slides.length; // 循環
+        updateUI();
+        startSlideTimer();
+      }
+
+      function startSlideTimer() {
+        if (timer) { clearTimeout(timer); timer = null; }
+        const slide = slides[current];
+        if (slide.dataset.type === 'image') {
+          timer = setTimeout(nextSlide, imgInterval);
+        } else if (slide.dataset.type === 'video') {
+          const v = slide.querySelector('video');
+          if (v) playVideo(v);
+        } else if (slide.dataset.type === 'iframe') {
+          if (ytPlayer) {
+            ytPlayer.playVideo(); // 開始播放
+          }
+        }
+      }
+
+      function init() {
+        updateUI();
+        startSlideTimer();
+      }
+
+      // === YouTube IFrame API ready ===
+      window.onYouTubeIframeAPIReady = function() {
+        ytPlayer = new YT.Player('yt-player', {
+          videoId: 'klrIxRcfNqo', // 你的 YouTube 影片 ID
+          playerVars: { 'autoplay': 1, 'controls': 1 },
+          events: {
+            'onStateChange': function(event) {
+              if (event.data === YT.PlayerState.ENDED) {
+                nextSlide(); // 影片結束自動跳下一張
+              }
+            }
+          }
+        });
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>
+ -->
+ 
+ 
+ <!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>手機影片輪播</title>
+<style>
+  body { margin:0; background:#000; display:flex; justify-content:center; align-items:center; height:100vh;}
+  #carousel { position:relative; width:100%; max-width:600px; aspect-ratio:16/9; overflow:hidden; border-radius:12px; background:#111;}
+  #slides { display:flex; width:100%; height:100%; transition:transform 0.6s ease-in-out;}
+  .slide { min-width:100%; height:100%; display:flex; justify-content:center; align-items:center; background:#000;}
+  .slide img, .slide video { width:100%; height:100%; object-fit:contain; }
+</style>
+</head>
+<body>
+
+<div id="carousel">
+  <div id="slides">
+    <!-- 圖片 -->
+    <div class="slide" data-type="image">
+      <img src="https://raw.githubusercontent.com/m-jpg533/pp/main/30.jpg" alt="圖片1">
+    </div>
+
+    <!-- 手機可播放影片 -->
+    <div class="slide" data-type="video">
+      <video src="https://m-jpg533.github.io/pp/29.mp4" autoplay muted playsinline controls></video>
+    </div>
+
+    <!-- 第二張圖片 -->
+    <div class="slide" data-type="image">
+      <img src="https://picsum.photos/id/1016/800/450" alt="圖片2">
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const slidesEl = document.getElementById('slides');
+  const slides = Array.from(slidesEl.children);
+  let current = 0;
+  const imgInterval = 5000;
+  let timer = null;
+
+  function updateUI() {
+    slidesEl.style.transform = `translateX(${-current*100}%)`;
+  }
+
+  function stopAllVideos() {
+    slides.forEach(s => {
+      if(s.dataset.type === 'video'){
+        const v = s.querySelector('video');
+        if(v){ v.pause(); v.currentTime = 0; }
+      }
+    });
+  }
+
+  function playVideo(v){
+    v.play().catch(()=>{});
+    v.onended = nextSlide;
+  }
+
+  function nextSlide(){
+    stopAllVideos();
+    current = (current + 1) % slides.length;
+    updateUI();
+    startSlideTimer();
+  }
+
+  function startSlideTimer(){
+    if(timer){ clearTimeout(timer); timer = null; }
+    const slide = slides[current];
+    if(slide.dataset.type==='image'){
+      timer = setTimeout(nextSlide, imgInterval);
+    } else if(slide.dataset.type==='video'){
+      const v = slide.querySelector('video');
+      if(v) playVideo(v);
+    }
+  }
+
+  function init(){
+    updateUI();
+    startSlideTimer();
+  }
+  init();
+})();
+</script>
+
+</body>
+</html>
