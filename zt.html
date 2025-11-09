@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>麻將16張模擬桌面（玩家雙列、縮小出牌）</title>
+<style>
+  body {
+    background: radial-gradient(circle, #0f4c1a 50%, #063d13 100%);
+    font-family: "微軟正黑體";
+    color: white;
+    margin: 0;
+    overflow: hidden;
+    text-align: center;
+  }
+  h1 {
+    margin-top: 8px;
+    color: gold;
+    font-size: 1.4em;
+  }
+  .table {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+  .player {
+    position: absolute;
+    display: grid;
+    grid-template-columns: repeat(8, auto);
+    justify-content: center;
+    gap: 4px;
+  }
+  .tile {
+    width: 45px;
+    height: 70px;
+    background: white;
+    border-radius: 6px;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.1em;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+  }
+
+  /* 玩家位置 */
+  #player-bottom {
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    gap: 6px;
+  }
+  #player-top {
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+  }
+  #player-left {
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    grid-template-columns: repeat(2, auto);
+  }
+  #player-right {
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    grid-template-columns: repeat(2, auto);
+  }
+
+  /* 隱藏其他家牌文字 */
+  .hidden-text {
+    color: transparent;
+    text-shadow: 0 0 10px #ccc;
+  }
+
+  /* 出牌區（中央） */
+  .discard-area {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 220px;
+  }
+
+  .discard-tile {
+    width: 30px;  /* 縮小至 2/3 */
+    height: 50px;
+    margin: 2px;
+    background: white;
+    color: black;
+    border-radius: 5px;
+    font-size: 0.9em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .turn-indicator {
+    position: absolute;
+    top: 47%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2em;
+    background: rgba(255, 215, 0, 0.9);
+    color: #000;
+    padding: 8px 16px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px #ff0;
+  }
+
+  .result {
+    position: absolute;
+    top: 58%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.95);
+    color: red;
+    font-size: 1.5em;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: bold;
+    display: none;
+    box-shadow: 0 0 10px red;
+  }
+</style>
+</head>
+<body>
+  <h1>麻將16張模擬桌面（玩家雙列 / 縮小出牌 / 胡牌展示）</h1>
+
+  <div class="table">
+    <div class="player" id="player-top"></div>
+    <div class="player" id="player-right"></div>
+    <div class="player" id="player-left"></div>
+    <div class="player" id="player-bottom"></div>
+
+    <div class="discard-area" id="discard-area"></div>
+    <div class="turn-indicator" id="turn">遊戲開始！</div>
+    <div class="result" id="result"></div>
+  </div>
+
+<script>
+const suits = ["萬","筒","條"];
+let wall = [];
+suits.forEach(s => { for(let n=1;n<=9;n++) for(let i=0;i<4;i++) wall.push(n+s); });
+["東","南","西","北","中","發","白"].forEach(z => { for(let i=0;i<4;i++) wall.push(z); });
+wall = wall.sort(()=>Math.random()-0.5);
+
+const players = { 東: wall.splice(0,16), 南: wall.splice(0,16), 西: wall.splice(0,16), 北: wall.splice(0,16) };
+const order = ["東","南","西","北"];
+let turnIndex = 0;
+
+const turnEl = document.getElementById("turn");
+const resultEl = document.getElementById("result");
+const discardArea = document.getElementById("discard-area");
+
+function renderHands(showAll=false){
+  Object.entries(players).forEach(([p,hand])=>{
+    const el=document.getElementById(`player-${mapPos(p)}`);
+    el.innerHTML="";
+    hand.forEach(tile=>{
+      const div=document.createElement("div");
+      div.className="tile";
+      div.textContent=(p==="北"||showAll)?tile:"🀄";
+      if(p!=="北"&&!showAll)div.classList.add("hidden-text");
+      if(p==="北")div.onclick=()=>playerDiscard(tile);
+      el.appendChild(div);
+    });
+  });
+}
+
+function mapPos(p){
+  return p==="東"?"top":p==="南"?"right":p==="西"?"left":"bottom";
+}
+
+function nextTurn(){
+  const player=order[turnIndex];
+  turnEl.textContent=`${player}家出牌中...`;
+  if(player==="北")return; // 玩家自行出牌
+  setTimeout(()=>{
+    const tile=players[player].pop();
+    discard(tile,player);
+    drawTile(player);
+  },2000);
+}
+
+function discard(tile,who){
+  const div=document.createElement("div");
+  div.className="discard-tile";
+  div.textContent=tile;
+  discardArea.appendChild(div);
+  checkWin(who,tile);
+}
+
+function drawTile(player){
+  if(wall.length===0)return;
+  players[player].push(wall.pop());
+  if(checkWin(player))return;
+  turnIndex=(turnIndex+1)%4;
+  nextTurn();
+}
+
+function playerDiscard(tile){
+  players["北"]=players["北"].filter(t=>t!==tile);
+  discard(tile,"北");
+  drawTile("北");
+  renderHands();
+}
+
+function checkWin(player,tile=null){
+  const hand=players[player];
+  if(hand.length%3!==2)return false;
+  const suits=hand.map(t=>t.slice(-1));
+  const allSame=suits.every(s=>s===suits[0]);
+  if(isWinningHand(hand)){
+    showResult(`${player}家${tile?"榮和":"自摸"}！${allSame?"清一色！":"胡牌！"}`);
+    renderHands(true);
+    return true;
+  }
+  return false;
+}
+
+function isWinningHand(tiles){
+  tiles.sort();
+  function tryWin(arr){
+    if(arr.length===0)return true;
+    for(let i=0;i<arr.length-1;i++){
+      if(arr[i]===arr[i+1]){
+        const rest=arr.slice();rest.splice(i,2);
+        if(checkMeld(rest))return true;
+      }
+    }
+    return false;
+  }
+  function checkMeld(arr){
+    if(arr.length===0)return true;
+    const f=arr[0];
+    const n=parseInt(f);
+    const s=f.slice(-1);
+    const seq1=(n+1)+s, seq2=(n+2)+s;
+    if(arr.includes(seq1)&&arr.includes(seq2)){
+      const rest=arr.slice();
+      rest.splice(rest.indexOf(f),1);
+      rest.splice(rest.indexOf(seq1),1);
+      rest.splice(rest.indexOf(seq2),1);
+      if(checkMeld(rest))return true;
+    }
+    const same=arr.filter(x=>x===f);
+    if(same.length>=3){
+      const rest=arr.slice();
+      rest.splice(rest.indexOf(f),3);
+      if(checkMeld(rest))return true;
+    }
+    return false;
+  }
+  return tryWin(tiles);
+}
+
+function showResult(text){
+  turnEl.style.display="none";
+  resultEl.textContent=text;
+  resultEl.style.display="block";
+}
+
+renderHands();
+nextTurn();
+</script>
+</body>
+</html>
