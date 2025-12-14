@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>音樂 Shorts 播放頁</title>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  background:
+    linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+    url("https://images.unsplash.com/photo-1519681393784-d120267933ba");
+  background-size:cover;
+  background-position:center;
+  font-family:"Microsoft JhengHei",sans-serif;
+  color:white;
+  overflow:hidden;
+}
+
+/* ===== 標題 ===== */
+#title{
+  position:absolute;
+  top:14px;
+  width:100%;
+  text-align:center;
+  font-size:20px;
+  z-index:30;
+  opacity:.9;
+}
+
+/* ===== 主區 ===== */
+.stage{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+}
+
+/* ===== 時鐘 ===== */
+.clock{
+  position:absolute;
+  width:300px;
+  height:300px;
+  border-radius:50%;
+  border:6px solid white;
+  z-index:20;
+  transition:opacity 1.2s;
+}
+
+.num{
+  position:absolute;
+  font-size:20px;
+  font-weight:bold;
+}
+.n12{top:6px;left:50%;transform:translateX(-50%)}
+.n3{right:6px;top:50%;transform:translateY(-50%)}
+.n6{bottom:6px;left:50%;transform:translateX(-50%)}
+.n9{left:6px;top:50%;transform:translateY(-50%)}
+
+.hand{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform-origin:center bottom;
+}
+.hour{
+  width:6px;height:60px;
+  background:red;
+  transform:translate(-50%,-100%);
+}
+.minute{
+  width:4px;height:90px;
+  background:yellow;
+  transform:translate(-50%,-100%);
+}
+
+/* ===== Shorts 影片 ===== */
+iframe{
+  width:240px;
+  height:226px; /* 9:16 */
+  border:none;
+  border-radius:18px;
+  background:black;
+  z-index:10;
+  opacity:0;
+  transition:opacity .8s;
+}
+iframe.show{opacity:1}
+
+/* ===== 雙層發光圈 ===== */
+.ring{
+  position:absolute;
+  border-radius:50%;
+  animation:spin linear infinite;
+}
+.outer{
+  width:360px;height:360px;
+  background:conic-gradient(#ff00cc,#00ffff,#ffcc00,#ff00cc);
+  filter:blur(14px);
+  animation-duration:12s;
+}
+.inner{
+  width:300px;height:300px;
+  background:conic-gradient(#00ffcc,#cc00ff,#00ffcc);
+  filter:blur(8px);
+  animation-duration:4s;
+}
+@keyframes spin{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+</style>
+</head>
+
+<body>
+
+<div id="title">⏰ 準備播放</div>
+
+<div class="stage" id="stage">
+
+  <!-- 時鐘 -->
+  <div class="clock" id="clock">
+    <div class="num n12">12</div>
+    <div class="num n3">3</div>
+    <div class="num n6">6</div>
+    <div class="num n9">9</div>
+    <div class="hand hour" id="hour"></div>
+    <div class="hand minute" id="minute"></div>
+  </div>
+
+  <!-- 發光圈 -->
+  <div class="ring outer"></div>
+  <div class="ring inner"></div>
+
+  <!-- 影片 -->
+  <iframe id="yt"
+    allow="autoplay; encrypted-media"
+    allowfullscreen>
+  </iframe>
+
+</div>
+
+<script>
+/* ===== 播放清單 ===== */
+const list=[
+  {title:"敬拜音樂 1",id:"jPRJSnRfvdo"},
+  {title:"敬拜音樂 2",id:"fNRyTj8Lg2k"},
+  {title:"敬拜音樂 3",id:"9bZkp7q19f0"}
+];
+
+let index=0;
+const yt=document.getElementById("yt");
+const title=document.getElementById("title");
+const clock=document.getElementById("clock");
+
+/* ===== 時鐘運作 ===== */
+setInterval(()=>{
+  const now=new Date();
+  const h=now.getHours()%12;
+  const m=now.getMinutes();
+  document.getElementById("hour").style.transform=
+    `translate(-50%,-100%) rotate(${h*30+m/2}deg)`;
+  document.getElementById("minute").style.transform=
+    `translate(-50%,-100%) rotate(${m*6}deg)`;
+},1000);
+
+/* ===== 播放 ===== */
+function play(i){
+  title.textContent="🎵 "+list[i].title+"（播放中）";
+  yt.classList.remove("show");
+  setTimeout(()=>{
+    yt.src=`https://www.youtube.com/embed/${list[i].id}?autoplay=1&mute=0`;
+    yt.classList.add("show");
+    clock.style.opacity="0";
+  },600);
+}
+
+/* ===== 手機滑動 ===== */
+let startX=0;
+stage.addEventListener("touchstart",e=>{
+  startX=e.touches[0].clientX;
+});
+stage.addEventListener("touchend",e=>{
+  let dx=e.changedTouches[0].clientX-startX;
+  if(dx<-50){ index=(index+1)%list.length; play(index); }
+  if(dx>50){ index=(index-1+list.length)%list.length; play(index); }
+});
+
+/* ===== 啟動 ===== */
+setTimeout(()=>play(0),3000);
+</script>
+
+</body>
+</html>
