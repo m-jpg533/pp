@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ⭐ LINE 預覽 -->
+<meta property="og:title" content="母親節快樂 💖">
+<meta property="og:description" content="點開這張卡片看看 ❤️">
+<meta property="og:image" content="https://images.unsplash.com/photo-1524253482453-3fed8d2fe12b">
+<meta property="og:url" content="https://你的網址.github.io/mother/">
+
+<title>母親節卡片</title>
+
+<style>
+body{
+  margin:0;
+  background:linear-gradient(#ffdde1,#ee9ca7);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  overflow:hidden;
+  font-family:sans-serif;
+}
+
+.card{
+  width:340px;
+  height:600px;
+  perspective:1000px;
+}
+
+.inner{
+  width:100%;
+  height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:1s;
+}
+
+.card.open .inner{
+  transform:rotateY(180deg);
+}
+
+.front, .back{
+  position:absolute;
+  width:100%;
+  height:100%;
+  border-radius:20px;
+  backface-visibility:hidden;
+  overflow:hidden;
+}
+
+.front{
+  background:#e91e63;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:22px;
+}
+.back{
+  background:white;
+  transform:rotateY(180deg);
+  padding:10px;
+  text-align:center;
+  overflow-y:auto;
+}
+.photo{
+  width:100%;
+  border-radius:15px;
+}
+
+/* 🎥 影片容器 */
+.video-box{
+  position:relative;
+  width:100%;
+  height:180px;
+  margin-top:8px;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+/* 播放按鈕 */
+.play-btn{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:40px;
+  color:white;
+  background:rgba(0,0,0,0.5);
+  border-radius:50%;
+  padding:10px;
+  cursor:pointer;
+}
+
+/* 文字 */
+.message{
+  margin:8px 0;
+  font-size:18px;
+  min-height:24px;
+}
+
+button{
+  padding:8px 12px;
+  border:none;
+  border-radius:10px;
+  background:#e91e63;
+  color:white;
+  margin:4px;
+}
+
+/* 花朵 */
+.flower{
+  position:absolute;
+  animation:explode 1s forwards;
+}
+
+@keyframes explode{
+  to{
+    transform:translate(var(--x), var(--y)) scale(0);
+    opacity:0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8a73467.mp3">
+</audio>
+
+<div class="card" onclick="openCard(event)">
+  <div class="inner">
+
+    <div class="front">
+      🌸 點我打開 🌸
+    </div>
+
+    <div class="back">
+
+      <img class="photo"
+      src="https://images.unsplash.com/photo-1511895426328-dc8714191300">
+
+      <!-- ✍️ 打字文字 -->
+      <div class="message" id="msg"></div>
+
+      <input id="input" placeholder="輸入祝福">
+
+      <br>
+
+      <button onclick="updateText(event)">更新</button>
+      <button onclick="share(event)">LINE分享</button>
+
+      <!-- 🎥 點擊播放影片 -->
+      <!-- <div class="video-box" id="videoBox">
+        <img src="https://img.youtube.com/vi/qBYq1XkSBg0/0.jpg" width="100%">
+        <div class="play-btn" onclick="playVideo(event)">▶</div>
+      </div> -->
+		<div class="video-box" id="videoBox">
+			<img src="https://img.youtube.com/vi/qBYq1XkSBg0/0.jpg" width="100%">
+			<div class="play-btn" onclick="playVideo(event)">▶</div>
+</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+// 🌸 開卡 + 花朵爆開 + 音樂
+function openCard(e){
+  document.querySelector(".card").classList.add("open");
+  document.getElementById("music").play();
+
+  explodeFlowers(e.clientX, e.clientY);
+}
+
+// 🌸 花朵爆開
+function explodeFlowers(x, y){
+  const flowers = ["🌸","🌺","🌼","🌷"];
+
+  for(let i=0;i<20;i++){
+    let f=document.createElement("div");
+    f.className="flower";
+    f.innerHTML = flowers[Math.floor(Math.random()*flowers.length)];
+
+    f.style.left=x+"px";
+    f.style.top=y+"px";
+
+    let dx = (Math.random()-0.5)*300;
+    let dy = (Math.random()-0.5)*300;
+
+    f.style.setProperty("--x", dx+"px");
+    f.style.setProperty("--y", dy+"px");
+
+    document.body.appendChild(f);
+
+    setTimeout(()=>f.remove(),1000);
+  }
+}
+
+// ✍️ 打字動畫
+function typeText(text){
+  let i=0;
+  let el=document.getElementById("msg");
+  el.innerText="";
+
+  let timer=setInterval(()=>{
+    el.innerText += text[i];
+    i++;
+    if(i>=text.length) clearInterval(timer);
+  },80);
+}
+
+// 更新文字
+function updateText(e){
+  e.stopPropagation();
+  let t=document.getElementById("input").value || "媽媽我愛你 ❤️";
+  typeText(t);
+}
+
+// LINE 分享（帶文字）
+function share(e){
+  e.stopPropagation();
+
+  let text = document.getElementById("msg").innerText;
+  let url = window.location.href + "?msg=" + encodeURIComponent(text);
+
+  window.open("https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(url));
+}
+
+// 讀取分享文字
+window.onload = function(){
+  let params = new URLSearchParams(window.location.search);
+  let msg = params.get("msg") || "天下的都是一樣的媽媽 ";
+  typeText(msg);
+}
+
+// ▶ 播放 YouTube
+
+function playVideo(e){
+  e.stopPropagation();
+
+  document.getElementById("videoBox").innerHTML = `
+    <iframe width="100%" height="180"
+    src="https://www.youtube.com/embed/qBYq1XkSBg0?autoplay=1&playsinline=1"
+    allow="autoplay; encrypted-media"
+    allowfullscreen></iframe>
+  `;
+}
+</script>
+
+</body>
+</html>
