@@ -1,0 +1,150 @@
+
+ 
+ <!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>穩定版</title>
+
+<style>
+
+body{
+    margin:0;
+    background:black;
+    height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* ===== 主影片 ===== */
+#video{
+    width:100%;
+    max-width:450px;
+    display:none;
+    border-radius:20px;
+}
+
+/* ===== 開始按鈕 ===== */
+#startBtn{
+    position:absolute;
+    z-index:1000;
+
+    padding:16px 30px;
+    font-size:20px;
+
+    background:#ffcc00;
+    border:none;
+    border-radius:10px;
+
+    cursor:pointer;
+}
+
+/* ===== 廣告 ===== */
+#ad-box{
+    position:fixed;
+
+    bottom:15px;
+    right:15px;
+
+    width:140px;
+    height:110px;
+
+    background:black;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    z-index:100;
+}
+
+/* ⭐ 讓廣告不擋點擊 */
+#ad-box{
+    pointer-events:auto;
+}
+
+/* 圖片 */
+#adImg{
+    width:100%;
+    height:100%;
+
+    object-fit:contain;
+
+    pointer-events:none;
+}
+
+/* ===== X 按鈕 ===== */
+#closeAd{
+    position:absolute;
+
+    top:5px;
+    right:5px;
+
+    width:28px;
+    height:28px;
+
+    background:red;
+    color:white;
+
+    border:none;
+    border-radius:50%;
+
+    z-index:1000;
+
+    cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<button id="startBtn">▶ 開始</button>
+
+<video id="video" controls playsinline>
+    <source src="https://m-jpg533.github.io/hh/70.mp4">
+</video>
+
+<div id="ad-box">
+
+    <button id="closeAd">X</button>
+
+    <img id="adImg"
+    src="https://m-jpg533.github.io/hh/93.jpg?v=2">
+
+</div>
+
+<script>
+
+const btn = document.getElementById("startBtn");
+const video = document.getElementById("video");
+const ad = document.getElementById("ad-box");
+const close = document.getElementById("closeAd");
+
+/* ===== 開始播放 ===== */
+btn.addEventListener("click", async () => {
+
+    btn.style.display = "none";
+    video.style.display = "block";
+
+    try{
+        await video.play();
+    }catch(e){
+        console.log(e);
+    }
+
+});
+
+/* ===== 關閉廣告（用 pointerup 更穩） ===== */
+close.addEventListener("pointerup", () => {
+    ad.style.display = "none";
+});
+
+</script>
+
+</body>
+</html>
