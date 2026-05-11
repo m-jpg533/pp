@@ -1,0 +1,187 @@
+
+ 
+ <!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>影片 + 廣告 正確版</title>
+
+<style>
+
+body{
+    margin:0;
+    height:100vh;
+
+    background:black;
+
+    overflow:hidden;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* ===== 主影片 ===== */
+#video{
+
+    width:100%;
+    max-width:450px;
+
+    border-radius:20px;
+
+    display:none;
+
+    background:black;
+}
+
+/* ===== 開始按鈕 ===== */
+#startBtn{
+
+    position:absolute;
+
+    z-index:1000;
+
+    padding:15px 30px;
+
+    font-size:20px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#ffcc00;
+
+    cursor:pointer;
+}
+
+/* ===== 廣告框 ===== */
+#ad-box{
+
+    position:fixed;
+
+    bottom:15px;
+    right:15px;
+
+    width:130px;
+    height:125px;
+
+    background:black;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    z-index:9999;
+
+    box-shadow:0 0 15px rgba(0,0,0,0.5);
+}
+
+/* ===== 廣告圖片 ===== */
+#adImg{
+
+    width:100%;
+    height:100%;
+
+    object-fit:contain;
+
+    background:black;
+
+    pointer-events:none;
+}
+
+/* ===== X 按鈕 ===== */
+#closeAd{
+
+    position:absolute;
+
+    top:5px;
+    right:5px;
+
+    width:30px;
+    height:30px;
+
+    background:red;
+
+    color:white;
+
+    border:none;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    z-index:10000;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ===== 開始按鈕 ===== -->
+<button id="startBtn">
+▶ 點這裡開始
+</button>
+
+<!-- ===== 主影片 ===== -->
+<video
+    id="video"
+    controls
+    playsinline
+    webkit-playsinline>
+
+    <source
+        src="https://m-jpg533.github.io/hh/70.mp4"
+        type="video/mp4">
+
+</video>
+
+<!-- ===== 廣告 ===== -->
+<div id="ad-box">
+
+    <button id="closeAd">X</button>
+
+    <img
+        id="adImg"
+        src="https://m-jpg533.github.io/hh/93.jpg?v=2">
+
+</div>
+
+<script>
+
+/* ===== 元件 ===== */
+const btn = document.getElementById("startBtn");
+const video = document.getElementById("video");
+
+/* ===== 開始播放 ===== */
+btn.onclick = async () => {
+
+    btn.remove();
+
+    video.style.display = "block";
+
+    try{
+        await video.play();
+    }catch(e){
+        console.log(e);
+    }
+
+};
+
+/* ===== 關閉廣告 ===== */
+document.getElementById("closeAd")
+.onclick = () => {
+
+    document.getElementById("ad-box").style.display = "none";
+
+};
+
+</script>
+
+</body>
+</html>
