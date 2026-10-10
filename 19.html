@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500俱樂部</title>
+    
+    <style>
+        
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background: green;
+        }
+
+        .poster {
+            max-width: 100%;
+            width: 500px;
+            height: auto;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 12px 24px;
+            margin: 6px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background: #1769aa;
+            color: white;
+        }
+
+        button:hover {
+            background: #0d4f85;
+        }
+
+        .page {
+            display: none;
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 900px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #00000020;
+        }
+
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+        }
+        img {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+        }
+        
+        #posterText {
+    color: white;
+    background-color: gold;
+    border: 3px solid gold;
+    font-size: 24px;
+    padding: 15px;    
+        }
+    #home {    
+    <div id="home" class="page">
+    color: green;
+    background-color: gold;
+    }
+    </style>
+</head>
+
+<body>
+
+    <h1>
+        <img
+            class="poster"
+            src="https://m-jpg533.github.io/pp/28.jpg"
+            alt="500俱樂部海報"
+            onclick="showPosterText()"
+        >
+    </h1>
+
+    <!-- 點擊圖片顯示或隱藏的文字 -->
+    <div id="posterText">
+        <h2>致理</h2>
+        <p>歡迎來到 致理國貿！</p>
+        <p>點擊上方海報，可以顯示或隱藏這段文字。</p>
+    </div>
+
+    <!-- 三個功能按鈕 -->
+    <button onclick="showPage('home')">海報</button>
+    <button onclick="showPage('prince')">王子貴</button>
+    <button onclick="showPage('tr')">高腳</button>
+     <button onclick="showPage('tt')">半斤八兩餐廳</button>
+     <button onclick="showPage('th')">半斤八兩餐廳菜單</button>
+    <!-- 海報頁面 -->
+    <div id="home" class="page">
+        <h2>海報</h2>
+        <p> Chen Shaoan哈嘍！這次聚餐由Chen Shaoan承辦，預定11/12星期四中午11:30在台北市吉林路142-1號（半斤九兩餐廳）對面備有免費停車場。
+主辦人：致理第3屆國貿同學會500俱樂部部長Chen Shaoan</p>
+        
+    </div>
+
+    <!-- 切換海報、王子貴、頁面 -->
+    <div id="prince" class="page">
+        <h2>王子貴</h2>
+        <iframe
+            src="https://m-jpg533.github.io/pp/king1.html"
+            title="王子貴"
+        ></iframe>
+    </div>
+
+    <!-- 高腳頁面 -->
+    <div id="tr" class="page">
+        <h2>高腳</h2>
+        <iframe
+            src="https://m-jpg533.github.io/pp/145.html"
+            title="高腳"
+        ></iframe>
+    </div>
+    <!-- 一郎餐廳頁面 -->
+    <div id="tt" class="page">
+        <h2>半斤八兩餐廳頁面</h2>
+        <iframe
+            src="https://extra9.com.tw/"
+            title="半斤八兩餐廳頁面"
+        ></iframe>
+    </div>
+    <!-- 半斤八兩餐廳菜單 -->
+    <div id="th" class="page">
+        <h2>半斤八兩餐廳菜單</h2>
+        <img
+            src="https://extra9.com.tw/images/setmeal_banner.png"
+            
+            title="半斤八兩餐廳菜單"
+        ></img>
+        
+        <img
+            src="https://extra9.com.tw/images/setmeal_seafood_img2.png"
+            
+            title="半斤八兩餐廳菜單"
+        ></img> 
+        <img
+            src="https://extra9.com.tw/images/index_menu_img3.png"
+            
+            title="半斤八兩餐廳菜單"
+        ></img> 
+    </div>
+    <script>
+        // 切換海報、王子貴、高腳頁面
+        function showPage(page) {
+            document.getElementById("home").style.display = "none";
+            document.getElementById("prince").style.display = "none";
+            document.getElementById("tr").style.display = "none";
+
+            document.getElementById(page).style.display = "block";
+            document.getElementById(tt).style.display = "block";
+            document.getElementById(th).style.display = "block";
+        }
+
+        // 點擊最上方圖片，顯示或隱藏文字
+        function showPosterText() {
+            const text = document.getElementById("posterText");
+
+            if (text.style.display === "none") {
+                text.style.display = "block";
+            } else {
+                text.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
